@@ -26,10 +26,28 @@ An FSM implementing registry block to manage parameter loading and manipulation 
 
 **The outputs at each of the FSM states are as follows:**
 
- 1.) idle:
+ 1.) **idle**:
  
 Initial state where all outputs (mask_param, code_param, sjw) are set to zero. No parameter manipulation. Serves as the starting point of the FSM and the state where the FSM returns after completing a parameter loading cycle.
 
- 2.) prmtr_0:
+ 2.) **prmtr_0**:
  
 Stores the least significant 8 bits of data as mask_param the remaining msb bits are concatenated with zeros.code_param and sjw outputs retain their values from the idle state.
+
+ 3.) **prmtr_1**:
+ 
+ Modifies the 8-bit mask_param using bits [2:0] of data (mask_param=data_reg[2:0]+mask_param[7:0]). Stores bits [7:3] of data as the least significant 5 bits of code_param remaining MSB bits are concatenated with zeros. sjw output remains unchanged.
+ 
+ 4.) **prmtr_2**:
+ 
+ Stores the least significant 6 bits of data as the MSB 6 bits of code_param and the remaining 5 bits of code_param remains the same in the LSB bits. Uses bits [7:6] of data to set the sjw output. Mask_param output remains unchanged.
+ 
+ 5.) **prmtr_ld_comp**:
+ 
+ Maintains the outputs (mask_param, code_param, sjw) from the previous state (prmtr_2). FSM waits in this state until the parameter load signal (param_ld) becomes active     
+ again. Upon receiving the signal, transitions back to the prmtr_0 state to initiate a new parameter loading cycle.
+ 
+ **Initialization and Reset:**
+ 
+ Upon a global reset (reset), the module sets its internal registers to initial values, and output parameters (mask_param, code_param, sjw) are reset
+ to zero. The FSM state is also reset to the idle state on global reset
