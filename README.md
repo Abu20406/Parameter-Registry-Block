@@ -51,6 +51,3 @@ Stores the least significant 8 bits of data as mask_param the remaining msb bits
  
  Upon a global reset (reset), the module sets its internal registers to initial values, and output parameters (mask_param, code_param, sjw) are reset
  to zero. The FSM state is also reset to the idle state on global reset.
-
- ![image](https://github.com/Abu20406/Parameter-Registry-Block/assets/68015588/78263467-b910-4715-908c-16eb91924b19)
-
